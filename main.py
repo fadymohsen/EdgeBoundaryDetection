@@ -24,24 +24,35 @@ class MyTabWidget(QTabWidget):
         uic.loadUi(ui_file, self)
         self.image_edges = pg.GraphicsLayoutWidget()
         self.selected_image_path = None
-        self.pushButton_browseImage.clicked.connect(self.browse_image)
+        self.pushButton_browseImage_HoughDetection.clicked.connect(self.browse_image_HoughDetection)
+        self.pushButton_browseImage_ActiveContour.clicked.connect(self.browse_image_ActiveContour)
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
 
-    def browse_image(self):
+    def browse_image_HoughDetection(self):
         options = QFileDialog.Options()
         file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
                                                 "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
                                                 options=options)
         if file_name:
             self.selected_image_path = file_name
-            self.display_image_on_graphics_layout(file_name)
+            self.display_image_on_graphics_layout_HoughDetection(file_name)
+
+
+    def browse_image_ActiveContour(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
+                                                "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
+                                                options=options)
+        if file_name:
+            self.selected_image_path = file_name
+            self.display_image_on_graphics_layout_ActiveContour(file_name)
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
 
-    def display_image_on_graphics_layout(self, image_path):
+    def display_image_on_graphics_layout_HoughDetection(self, image_path):
         image_data = cv2.imread(image_path)
         image_data = cv2.cvtColor(image_data, cv2.COLOR_BGR2GRAY)
         image_data = np.rot90(image_data, -1)
@@ -49,6 +60,21 @@ class MyTabWidget(QTabWidget):
         self.graphics_beforeHoughDetection.clear()
         # Create a PlotItem or ViewBox
         view_box = self.graphics_beforeHoughDetection.addViewBox()
+        # Create an ImageItem and add it to the ViewBox
+        image_item = pg.ImageItem(image_data)
+        view_box.addItem(image_item)
+        # Optional: Adjust the view to fit the image
+        view_box.autoRange()
+
+
+    def display_image_on_graphics_layout_ActiveContour(self, image_path):
+        image_data = cv2.imread(image_path)
+        image_data = cv2.cvtColor(image_data, cv2.COLOR_BGR2GRAY)
+        image_data = np.rot90(image_data, -1)
+        # Clear the previous image if any
+        self.graphics_beforeActiveContour.clear()
+        # Create a PlotItem or ViewBox
+        view_box = self.graphics_beforeActiveContour.addViewBox()
         # Create an ImageItem and add it to the ViewBox
         image_item = pg.ImageItem(image_data)
         view_box.addItem(image_item)
