@@ -37,8 +37,6 @@ class MyTabWidget(QTabWidget):
         if file_name:
             self.selected_image_path = file_name
             self.display_image_on_graphics_layout(file_name)
-            # Apply in Noise/Filtering
-            self.noiseAddFilterAdd.applyNoise()
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
@@ -48,9 +46,9 @@ class MyTabWidget(QTabWidget):
         image_data = cv2.cvtColor(image_data, cv2.COLOR_BGR2GRAY)
         image_data = np.rot90(image_data, -1)
         # Clear the previous image if any
-        self.graphicsLayoutWidget_displayImagesMain.clear()
+        self.graphics_beforeHoughDetection.clear()
         # Create a PlotItem or ViewBox
-        view_box = self.graphicsLayoutWidget_displayImagesMain.addViewBox()
+        view_box = self.graphics_beforeHoughDetection.addViewBox()
         # Create an ImageItem and add it to the ViewBox
         image_item = pg.ImageItem(image_data)
         view_box.addItem(image_item)
