@@ -4,6 +4,7 @@ from PyQt5 import uic
 import cv2
 import pyqtgraph as pg
 import numpy as np
+from houghTransform import houghTransformShapeDetection
 
 
 
@@ -26,6 +27,7 @@ class MyTabWidget(QTabWidget):
         self.selected_image_path = None
         self.pushButton_browseImage_HoughDetection.clicked.connect(self.browse_image_HoughDetection)
         self.pushButton_browseImage_ActiveContour.clicked.connect(self.browse_image_ActiveContour)
+        self.houghTransform = houghTransformShapeDetection(self)
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
@@ -38,6 +40,7 @@ class MyTabWidget(QTabWidget):
         if file_name:
             self.selected_image_path = file_name
             self.display_image_on_graphics_layout_HoughDetection(file_name)
+            self.houghTransform.detectShape()
 
 
     def browse_image_ActiveContour(self):
