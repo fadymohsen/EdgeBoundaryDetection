@@ -603,7 +603,7 @@ QTabBar::tab:selected {
 </string>
   </property>
   <property name="currentIndex">
-   <number>1</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="HoughDetection">
    <attribute name="title">
@@ -701,29 +701,11 @@ QTabBar::tab:selected {
               <string>Circles</string>
              </property>
             </item>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>30</width>
-              <height>17</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_houghDetection">
-            <property name="text">
-             <string>Submit</string>
-            </property>
+            <item>
+             <property name="text">
+              <string>Ellipse</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item>
