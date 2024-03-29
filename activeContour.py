@@ -15,15 +15,23 @@ class ActiveContour:
 
 
     def load_and_process_image(self):
-        if self is None:
+        image = cv2.imread(self.image_path, cv2.IMREAD_COLOR)  # Use color mode to load to ensure it can be rotated correctly
+        
+        if image is None:
             print(f"Failed to load image from {self.image_path}")
             return None, None
         
-        gray_image = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         print("\nSUCCESS - Image is converted to GreyScale")
-        edge_image = cv2.Canny(gray_image, 30, 150)
+
+        rotated_image = np.rot90(gray_image, -1)  # Rotate 90 degrees counter-clockwise
+        print("SUCCESS - Image is Rotated by 90 Degrees")
+        
+        edge_image = cv2.Canny(rotated_image, 30, 150)
         print("SUCCESS - Image is converted to Canny Edges\n\n")
-        return gray_image, edge_image
+        
+        return rotated_image, edge_image
+
 
 
 
