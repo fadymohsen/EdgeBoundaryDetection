@@ -70,6 +70,23 @@ class MyTabWidget(QTabWidget):
         view_box.autoRange()
 
 
+    def display_image(self, graphics_widget, image_data):
+        """Utility function to display an image in a given graphics layout widget."""
+        if image_data is not None:
+            # Clear the previous image if any
+            graphics_widget.clear()
+            # Convert image data to the right format (adding a channel dimension)
+            image_data_formatted = image_data[..., np.newaxis]
+            # Create a PlotItem or ViewBox
+            view_box = graphics_widget.addViewBox()
+            # Create an ImageItem and add it to the ViewBox
+            image_item = pg.ImageItem(image_data_formatted)
+            view_box.addItem(image_item)
+            # Adjust the view to fit the image
+            view_box.autoRange()
+        else:
+            print("Image data is not available.")
+
     def browse_image_ActiveContour(self):
         options = QFileDialog.Options()
         file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
@@ -77,17 +94,14 @@ class MyTabWidget(QTabWidget):
                                                 options=options)
         if file_name:
             active_contour_instance = ActiveContour(file_name)
-            processed_image = active_contour_instance.get_image_data()
-            if processed_image is not None:
-                # Clear the previous image if any
-                self.graphics_beforeActiveContour.clear()
-                # Create a PlotItem or ViewBox if not already done
-                view_box = self.graphics_beforeActiveContour.addViewBox()
-                image_item = pg.ImageItem(processed_image[:, :, np.newaxis])
-                view_box.addItem(image_item)
-                view_box.autoRange()
-            else:
-                print("Failed to load or process the image.")
+            gray_image = active_contour_instance.get_gray_image_data()
+            edge_image = active_contour_instance.get_edge_image_data()
+
+            # Display the grayscale image in graphics_beforeActiveContour
+            self.display_image(self.graphics_beforeActiveContour, gray_image)
+
+            # Display the Canny edge processed image in graphics_afterActiveContour
+            self.display_image(self.graphics_afterActiveContour, edge_image)
 
 
 # -----------------------------------------------------------------------------------------------------------------
