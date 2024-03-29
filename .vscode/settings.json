@@ -3,6 +3,7 @@
         "Badawi",
         "imread",
         "imwrite",
+        "newaxis",
         "Pixmap",
         "pyqtgraph"
     ]

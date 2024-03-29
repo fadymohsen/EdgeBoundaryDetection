@@ -5,8 +5,7 @@ import cv2
 import pyqtgraph as pg
 import numpy as np
 from houghTransform import houghTransformShapeDetection
-
-
+from activeContour import ActiveContour
 
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -50,6 +49,7 @@ class MyTabWidget(QTabWidget):
                                                 options=options)
         if file_name:
             self.selected_image_path = file_name
+            active_contour_instance = ActiveContour(file_name)
             self.display_image_on_graphics_layout_ActiveContour(file_name)
 
 # -----------------------------------------------------------------------------------------------------------------
@@ -70,19 +70,25 @@ class MyTabWidget(QTabWidget):
         view_box.autoRange()
 
 
-    def display_image_on_graphics_layout_ActiveContour(self, image_path):
-        image_data = cv2.imread(image_path)
-        image_data = cv2.cvtColor(image_data, cv2.COLOR_BGR2GRAY)
-        image_data = np.rot90(image_data, -1)
-        # Clear the previous image if any
-        self.graphics_beforeActiveContour.clear()
-        # Create a PlotItem or ViewBox
-        view_box = self.graphics_beforeActiveContour.addViewBox()
-        # Create an ImageItem and add it to the ViewBox
-        image_item = pg.ImageItem(image_data)
-        view_box.addItem(image_item)
-        # Optional: Adjust the view to fit the image
-        view_box.autoRange()
+    def browse_image_ActiveContour(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
+                                                "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
+                                                options=options)
+        if file_name:
+            active_contour_instance = ActiveContour(file_name)
+            processed_image = active_contour_instance.get_image_data()
+            if processed_image is not None:
+                # Clear the previous image if any
+                self.graphics_beforeActiveContour.clear()
+                # Create a PlotItem or ViewBox if not already done
+                view_box = self.graphics_beforeActiveContour.addViewBox()
+                image_item = pg.ImageItem(processed_image[:, :, np.newaxis])
+                view_box.addItem(image_item)
+                view_box.autoRange()
+            else:
+                print("Failed to load or process the image.")
+
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
