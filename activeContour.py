@@ -25,6 +25,7 @@ class ActiveContour:
             print(f"Failed to load image from {self.image_path}")
             return None, None
         
+        image = cv2.resize(image,(360,360))
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         print("\nSUCCESS - Image is converted to GreyScale")
 
