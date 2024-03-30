@@ -4,7 +4,7 @@ from PyQt5 import uic
 from PyQt5 import QtWidgets
 import cv2
 import time
-# from PyQt5.QCore import QTimer
+from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
 import numpy as np
 from houghTransform import houghTransformShapeDetection
@@ -119,6 +119,7 @@ class MyTabWidget(QTabWidget):
             canvas = FigureCanvasQTAgg(self.fig)
             self.graphicsView.setScene(scene)
             scene.addWidget(canvas)
+            self.fig.canvas.draw()
             
         else:
             print("Image data is not available.")
@@ -134,13 +135,31 @@ class MyTabWidget(QTabWidget):
             edge_image = active_contour_instance.get_edge_image_data()
             self.display_image_2(self.graphics_beforeActiveContour, gray_image)
             all_img, area_list , perimeter_list = active_contour_instance.active_contour()
-            # Display the grayscale image in graphics_beforeActiveContour
-            # self.display_image(self.graphics_beforeActiveContour, gray_image)
             print(f"len:{len(all_img)}")
-            for img in all_img:
+
+            # Create a QTimer instance
+            self.timer = QTimer()
+            self.timer.timeout.connect(self.display_next_image)
+            
+            # Initialize index to track the current image being displayed
+            self.image_index = 0
+
+            # Start the timer
+            self.timer.start(50)  # Adjust the interval (milliseconds) as needed
+
+            # Store all_img in self to access it in display_next_image
+            self.all_img = all_img
+
+    def display_next_image(self):
+        if self.image_index < len(self.all_img):
+            img = self.all_img[self.image_index]
+            self.display_image(img)
+            self.image_index += 1
+        else:
+            # Stop the timer when all images have been displayed
+            self.timer.stop()
+
                 
-                self.display_image(img)
-                # time.sleep(2)
 
 
 
