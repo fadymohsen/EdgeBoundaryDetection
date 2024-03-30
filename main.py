@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QTabWidget, QFileDialog
 from PyQt5 import uic
+from PyQt5 import QtWidgets
 import cv2
 import time
 # from PyQt5.QCore import QTimer
@@ -9,6 +10,8 @@ import numpy as np
 from houghTransform import houghTransformShapeDetection
 from activeContour import ActiveContour
 
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import  Figure
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
@@ -29,6 +32,9 @@ class MyTabWidget(QTabWidget):
         self.pushButton_browseImage_HoughDetection.clicked.connect(self.browse_image_HoughDetection)
         self.pushButton_browseImage_ActiveContour.clicked.connect(self.browse_image_ActiveContour)
         self.houghTransform = houghTransformShapeDetection(self)
+        self.fig = Figure(figsize=(4.5, 4.5))
+        self.ax = self.fig.add_subplot()
+        self.ax.set_position([-0.04, 0.34, 0.75, 0.65])
         
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
@@ -70,9 +76,8 @@ class MyTabWidget(QTabWidget):
         view_box.addItem(image_item)
         # Optional: Adjust the view to fit the image
         view_box.autoRange()
-
-
-    def display_image(self, graphics_widget, image_data):
+    
+    def display_image_2(self, graphics_widget, image_data):
         """Utility function to display an image in a given graphics layout widget."""
         if image_data is not None:
             # Clear the previous image if any
@@ -88,6 +93,33 @@ class MyTabWidget(QTabWidget):
             # Adjust the view to fit the image
             # view_box.autoRange()
             view_box.disableAutoRange()
+          
+        else:
+            print("Image data is not available.")
+
+    def display_image(self,  image_data):
+        """Utility function to display an image in a given graphics layout widget."""
+        if image_data is not None:
+            # Clear the previous image if any
+            # graphics_widget.clear()
+            # # Convert image data to the right format (adding a channel dimension)
+            # # image_data_formatted = image_data[..., np.newaxis]
+            # image_data = np.rot90(image_data, -1)
+            # # Create a PlotItem or ViewBox
+            # view_box = graphics_widget.addViewBox()
+            # # Create an ImageItem and add it to the ViewBox
+            # image_item = pg.ImageItem(image_data)
+            # view_box.addItem(image_item)
+            # # Adjust the view to fit the image
+            # # view_box.autoRange()
+            # view_box.disableAutoRange()
+            self.ax.clear()
+            self.ax.imshow(cv2.cvtColor(image_data, cv2.IMREAD_GRAYSCALE))
+            scene = QtWidgets.QGraphicsScene()
+            canvas = FigureCanvasQTAgg(self.fig)
+            self.graphicsView.setScene(scene)
+            scene.addWidget(canvas)
+            
         else:
             print("Image data is not available.")
 
@@ -100,14 +132,15 @@ class MyTabWidget(QTabWidget):
             active_contour_instance = ActiveContour(file_name)
             gray_image = active_contour_instance.get_gray_image_data()
             edge_image = active_contour_instance.get_edge_image_data()
-            self.display_image(self.graphics_beforeActiveContour, gray_image)
+            self.display_image_2(self.graphics_beforeActiveContour, gray_image)
             all_img, area_list , perimeter_list = active_contour_instance.active_contour()
             # Display the grayscale image in graphics_beforeActiveContour
             # self.display_image(self.graphics_beforeActiveContour, gray_image)
             print(f"len:{len(all_img)}")
             for img in all_img:
-                self.display_image(self.graphics_afterActiveContour, img)
-                time.sleep(0.05)
+                print("LXSL")
+                self.display_image(img)
+                # time.sleep(2)
 
 
 
