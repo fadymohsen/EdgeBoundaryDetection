@@ -8,8 +8,10 @@ import matplotlib.pyplot as plt
 
 
 class ActiveContour:
-    def __init__(self, image_path):
+    def __init__(self, image_path,main_window):
         self.image_path = image_path
+        self.ui = main_window
+        self.handle_buttons()
         self.gray_image, self.edge_image = self.load_and_process_image()
         self.contour_r, self.contour_c = [], []
         self.contour_points =[]
@@ -17,7 +19,12 @@ class ActiveContour:
         self.all_img = []
 
 
-
+    def handle_buttons(self):
+        print("Kkkkkkk")
+        self.ui.Points_Slider.valueChanged.connect(self.Init_contour)
+        self.ui.iterations_Slider.valueChanged.connect(self.active_contour)
+        
+        
     def load_and_process_image(self):
         image = cv2.imread(self.image_path, cv2.IMREAD_COLOR)  # Use color mode to load to ensure it can be rotated correctly
         
@@ -47,7 +54,13 @@ class ActiveContour:
         return self.edge_image
     
     def Init_contour(self):
-        s = np.linspace(0, 2*np.pi, 50)
+       
+        points = int(self.ui.Points_Slider.value())
+        print(f"points:{points}")
+        # center_x = int(self.ui.CenterX_Slider.value())
+        # center_y = int(self.ui.CenterY_Slider.value())
+        s = np.linspace(0, 2*np.pi, points)
+        # for apple , shape and fish
         contour_r =((np.abs(400- 380*np.sin(s))) // 2).astype(int)
         contour_c =((np.abs(400 + 380*np.cos(s))) // 2).astype(int)
         # contour_r =((np.abs(350- 300*np.sin(s))) // 2).astype(int)
@@ -173,9 +186,10 @@ class ActiveContour:
 
 
     def active_contour(self):
+        iterations = int(self.ui.iterations_Slider.value())
         all_img = []
         area_list, perimeter_list = [], []
-        for __ in range(110):
+        for __ in range(iterations):
             lapcopy = np.copy(self.gray_image)
         #     print(lapcopy)
             new_contour_r, new_contour_c = [], []
