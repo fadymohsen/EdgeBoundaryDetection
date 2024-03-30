@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QTabWidget, QFileDialog
 from PyQt5 import uic
 import cv2
+import time
+# from PyQt5.QCore import QTimer
 import pyqtgraph as pg
 import numpy as np
 from houghTransform import houghTransformShapeDetection
@@ -27,7 +29,7 @@ class MyTabWidget(QTabWidget):
         self.pushButton_browseImage_HoughDetection.clicked.connect(self.browse_image_HoughDetection)
         self.pushButton_browseImage_ActiveContour.clicked.connect(self.browse_image_ActiveContour)
         self.houghTransform = houghTransformShapeDetection(self)
-
+        
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
 
@@ -42,15 +44,15 @@ class MyTabWidget(QTabWidget):
             self.houghTransform.detectShape()
 
 
-    def browse_image_ActiveContour(self):
-        options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
-                                                "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
-                                                options=options)
-        if file_name:
-            self.selected_image_path = file_name
-            active_contour_instance = ActiveContour(file_name)
-            self.display_image_on_graphics_layout_ActiveContour(file_name)
+    # def browse_image_ActiveContour(self):
+    #     options = QFileDialog.Options()
+    #     file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
+    #                                             "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
+    #                                             options=options)
+    #     if file_name:
+    #         self.selected_image_path = file_name
+    #         active_contour_instance = ActiveContour(file_name)
+    #         self.display_image_on_graphics_layout_ActiveContour(file_name)
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
@@ -76,14 +78,16 @@ class MyTabWidget(QTabWidget):
             # Clear the previous image if any
             graphics_widget.clear()
             # Convert image data to the right format (adding a channel dimension)
-            image_data_formatted = image_data[..., np.newaxis]
+            # image_data_formatted = image_data[..., np.newaxis]
+            image_data = np.rot90(image_data, -1)
             # Create a PlotItem or ViewBox
             view_box = graphics_widget.addViewBox()
             # Create an ImageItem and add it to the ViewBox
-            image_item = pg.ImageItem(image_data_formatted)
+            image_item = pg.ImageItem(image_data)
             view_box.addItem(image_item)
             # Adjust the view to fit the image
-            view_box.autoRange()
+            # view_box.autoRange()
+            view_box.disableAutoRange()
         else:
             print("Image data is not available.")
 
@@ -96,13 +100,19 @@ class MyTabWidget(QTabWidget):
             active_contour_instance = ActiveContour(file_name)
             gray_image = active_contour_instance.get_gray_image_data()
             edge_image = active_contour_instance.get_edge_image_data()
-
-            # Display the grayscale image in graphics_beforeActiveContour
             self.display_image(self.graphics_beforeActiveContour, gray_image)
+            all_img, area_list , perimeter_list = active_contour_instance.active_contour()
+            # Display the grayscale image in graphics_beforeActiveContour
+            # self.display_image(self.graphics_beforeActiveContour, gray_image)
+            print(f"len:{len(all_img)}")
+            for img in all_img:
+                self.display_image(self.graphics_afterActiveContour, img)
+                time.sleep(0.05)
+
+
 
             # Display the Canny edge processed image in graphics_afterActiveContour
-            self.display_image(self.graphics_afterActiveContour, edge_image)
-
+          
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
