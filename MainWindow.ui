@@ -973,7 +973,7 @@ QTabBar::tab:selected {
              </spacer>
             </item>
             <item>
-             <widget class="GraphicsLayoutWidget" name="graphics_afterActiveContour" native="true">
+             <widget class="QGraphicsView" name="graphicsView">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                 <horstretch>0</horstretch>
