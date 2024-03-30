@@ -138,7 +138,7 @@ class MyTabWidget(QTabWidget):
             # self.display_image(self.graphics_beforeActiveContour, gray_image)
             print(f"len:{len(all_img)}")
             for img in all_img:
-                print("LXSL")
+                
                 self.display_image(img)
                 # time.sleep(2)
 
