@@ -1,115 +1,172 @@
-import cv2
-import matplotlib.pyplot as plt
+# #chain code with the visualization on matplotlib
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import cv2
+
+# # Define 8-connected neighbors
+# neighbors = [(-1, -1), (0, -1), (1, -1), (1, 0),
+#              (1, 1), (0, 1), (-1, 1), (-1, 0)]
+
+# # Function to find the next boundary pixel
+# def next_boundary_pixel(image, x, y, direction):
+#     height, width = image.shape
+#     for i in range(8):
+#         dx, dy = neighbors[(direction + i) % 8]
+#         new_x, new_y = x + dx, y + dy
+#         if 0 <= new_x < width and 0 <= new_y < height and image[new_y, new_x] != 0:
+#             return (new_x, new_y), (direction + i) % 8
+#     return None, None  # If no boundary pixel found within image bounds
+
+
+# # Function to generate chain code for the boundary
+# def generate_chain_code(contour):
+#     chain_code = []
+#     if len(contour) > 0:
+#         x, y = contour[0][0][0], contour[0][0][1]  # Accessing the first point of the contour
+#         direction = 0  # Start with direction 0 (East)
+#         for point in contour[1:]:
+#             dx = point[0][0] - x
+#             dy = point[0][1] - y
+#             x, y = point[0][0], point[0][1]
+#             # Determine direction based on dx, dy
+#             if dx == 1 and dy == 0:
+#                 direction = 0
+#             elif dx == 1 and dy == -1:
+#                 direction = 1
+#             elif dx == 0 and dy == -1:
+#                 direction = 2
+#             elif dx == -1 and dy == -1:
+#                 direction = 3
+#             elif dx == -1 and dy == 0:
+#                 direction = 4
+#             elif dx == -1 and dy == 1:
+#                 direction = 5
+#             elif dx == 0 and dy == 1:
+#                 direction = 6
+#             elif dx == 1 and dy == 1:
+#                 direction = 7
+#             chain_code.append(direction)
+#     return chain_code
+
+# # Load your own image
+# image_path = r"C:\Users\hp\Downloads\WhatsApp Image 2024-03-29 at 4.02.13 PM.jpeg"  # Replace 'your_image.jpg' with your image file path
+# image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+# # C:\Users\hp\Downloads\WhatsApp Image 2024-03-29 at 4.02.13 PM.jpeg-->apple photo
+# #C:\Users\hp\Desktop\CV2\EdgeBoundaryDetection\Images\pikachu-u11.jpg --> pockimon photo
+# # C:\Users\hp\Desktop\CV2\EdgeBoundaryDetection\Images\Spongebob-cartoon-1024x848.png-->sponge bob
+# #  C:\Users\hp\Desktop\CV2\EdgeBoundaryDetection\Images\hot-cartoons-8-435-1a28836186f448749f53127465d172a0.jpg-->damo impossible
+# # C:\Users\hp\Desktop\CV2\EdgeBoundaryDetection\Images\lena.png -->lena png
+
+# # Apply active contour model to detect contour
+# snake = cv2.imread(image_path, 0)
+# snake = cv2.GaussianBlur(snake, (3, 3), 0)
+# snake = cv2.Canny(snake, 100, 200)
+# contours, _ = cv2.findContours(snake, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# if contours:
+#     contour = max(contours, key=cv2.contourArea)  # Select the largest contour
+
+#     # Generate chain code
+#     chain_code = generate_chain_code(contour)
+#     print("Chain Code:", chain_code)
+
+#     # Convert chain code to symbols
+#     symbols = ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE']
+#     chain_code_symbols = [symbols[code] for code in chain_code]
+#     print("Chain Code Symbols:", chain_code_symbols)
+
+#     # Plot chain code symbols on image
+#     plt.subplot(1, 2, 1)
+#     plt.imshow(image, cmap='gray')
+#     plt.title('Original Image')
+#     plt.xticks([]), plt.yticks([])
+
+#     plt.subplot(1, 2, 2)
+#     plt.plot(contour[:, 0, 0], contour[:, 0, 1], 'r')
+#     plt.title('Detected Contour with Chain Code')
+#     plt.xticks([]), plt.yticks([])
+
+#     plt.show()
+# else:
+#     print("No contours found.")
+
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+
+
+#chain code only
+
 import numpy as np
+import cv2
 
-def calculate_direction(curr_point, next_point):
-    # Calculate relative positions
-    delta_row = next_point[0] - curr_point[0]
-    delta_col = next_point[1] - curr_point[1]
-    
-    # Determine direction based on relative positions
-    if delta_row == 0:
-        if delta_col == 1:
-            return 0  # East
-        elif delta_col == -1:
-            return 4  # West
-    elif delta_row == 1:
-        if delta_col == 1:
-            return 1  # Northeast
-        elif delta_col == 0:
-            return 2  # North
-        elif delta_col == -1:
-            return 3  # Northwest
-    elif delta_row == -1:
-        if delta_col == 1:
-            return 7  # Southeast
-        elif delta_col == 0:
-            return 6  # South
-        elif delta_col == -1:
-            return 5  # Southwest
+# Define 8-connected neighbors
+neighbors = [(-1, -1), (0, -1), (1, -1), (1, 0),
+             (1, 1), (0, 1), (-1, 1), (-1, 0)]
+
+# Function to find the next boundary pixel
+def next_boundary_pixel(image, x, y, direction):
+    height, width = image.shape
+    for i in range(8):
+        dx, dy = neighbors[(direction + i) % 8]
+        new_x, new_y = x + dx, y + dy
+        if 0 <= new_x < width and 0 <= new_y < height and image[new_y, new_x] != 0:
+            return (new_x, new_y), (direction + i) % 8
+    return None, None  # If no boundary pixel found within image bounds
 
 
-def generate_chain_code(contour_points):
+# Function to generate chain code for the boundary
+def generate_chain_code(contour):
     chain_code = []
-    for i in range(len(contour_points)):
-        curr_point = contour_points[i]
-        next_point = contour_points[(i + 1) % len(contour_points)]  # Wrap around for last point
-        direction = calculate_direction(curr_point, next_point)
-        chain_code.append(direction)
+    if len(contour) > 0:
+        x, y = contour[0][0][0], contour[0][0][1]  # Accessing the first point of the contour
+        direction = 0  # Start with direction 0 (East)
+        for point in contour[1:]:
+            dx = point[0][0] - x
+            dy = point[0][1] - y
+            x, y = point[0][0], point[0][1]
+            # Determine direction based on dx, dy
+            if dx == 1 and dy == 0:
+                direction = 0
+            elif dx == 1 and dy == -1:
+                direction = 1
+            elif dx == 0 and dy == -1:
+                direction = 2
+            elif dx == -1 and dy == -1:
+                direction = 3
+            elif dx == -1 and dy == 0:
+                direction = 4
+            elif dx == -1 and dy == 1:
+                direction = 5
+            elif dx == 0 and dy == 1:
+                direction = 6
+            elif dx == 1 and dy == 1:
+                direction = 7
+            chain_code.append(direction)
     return chain_code
 
+# Load your own image
+image_path = r"C:\Users\hp\Downloads\WhatsApp Image 2024-03-29 at 4.02.13 PM.jpeg"  # Replace 'your_image.jpg' with your image file path
+image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
-def plot_chain_code(chain_code):
-    # Initialize the figure
-    plt.figure(figsize=(8, 8))
-    ax = plt.gca()
-    ax.set_aspect('equal')
+# Apply active contour model to detect contour
+snake = cv2.imread(image_path, 0)
+snake = cv2.GaussianBlur(snake, (3, 3), 0)
+snake = cv2.Canny(snake, 100, 200)
+contours, _ = cv2.findContours(snake, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+if contours:
+    contour = max(contours, key=cv2.contourArea)  # Select the largest contour
 
-    # Define arrow directions
-    directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
-    arrow_length = 0.8
+    # Generate chain code
+    chain_code = generate_chain_code(contour)
+    print("Chain Code:", chain_code)
 
-    # Plot arrows for each direction in the chain code
-    current_position = np.array([0, 0])
-    for code in chain_code:
-        if code is not None:  # Ignore None values
-            direction = directions[code]
-            next_position = current_position + np.array(direction) * arrow_length
-            arrow = plt.arrow(current_position[0], current_position[1], direction[0], direction[1], head_width=0.1, head_length=0.2, fc='blue', ec='blue')
-            ax.add_patch(arrow)
-            current_position = next_position
+    # Convert chain code to symbols
+    symbols = ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE']
+    chain_code_symbols = [symbols[code] for code in chain_code]
+    print("Chain Code Symbols:", chain_code_symbols)
 
-    # Set plot limits
-    ax.set_xlim(-150, 150)
-    ax.set_ylim(-150, 150)
-    ax.set_title('Chain Code')
-    ax.set_aspect('equal', adjustable='box')
-    plt.show()
+else:
+    print("No contours found.")
 
-
-
-##static hta soghayra
-# def plot_chain_code(chain_code):
-#     # Create a blank image to draw arrows on
-#     img = np.zeros((500, 500, 3), dtype=np.uint8)
-#     img.fill(255)  # Fill image with white color
-
-#     # Define arrow directions
-#     directions = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
-#     arrow_length = 20  # Length of each arrow
-
-#     # Starting position for drawing arrows
-#     current_position = (250, 250)
-
-#     # Draw arrows for each direction in the chain code
-#     for code in chain_code:
-#         if code is not None:  # Ignore None values
-#             direction = directions[code]
-#             next_position = (current_position[0] + direction[0] * arrow_length, current_position[1] + direction[1] * arrow_length)
-#             cv2.arrowedLine(img, current_position, next_position, (0, 0, 255), thickness=2)
-#             current_position = next_position
-
-#     # Display the image with arrows
-#     cv2.imshow('Chain Code', img)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-
-# Load the image
-image = cv2.imread(r"C:\Users\hp\Downloads\b3ccef2eda2ee85ba89ce3f8d3e69205.jpg", cv2.IMREAD_GRAYSCALE)
-#C:\Users\hp\Downloads\WhatsApp Image 2024-03-29 at 4.02.13 PM.jpeg   --> apple photo
-#C:\Users\hp\Downloads\b3ccef2eda2ee85ba89ce3f8d3e69205.jpg   ---> lama photo
-#C:\Users\hp\Downloads\FreemanCode1.png  --> sora 3ndi eli gahza
-
-# Apply Canny edge detection
-edges = cv2.Canny(image, 100, 200)
-
-# Find contours
-contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-contour_points = contours[0].reshape(-1, 2)
-
-# Generate chain code
-chain_code = generate_chain_code(contour_points)
-print("Chain Code:", chain_code)
-
-# Plot chain code
-plot_chain_code(chain_code)
