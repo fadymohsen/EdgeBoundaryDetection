@@ -68,7 +68,7 @@ class MyTabWidget(QTabWidget):
         view_box.autoRange()
     
 
-
+    
     def display_image(self,graphics_widget,image_data):
         """Utility function to display an image in a given graphics layout widget."""
         if image_data is not None:
