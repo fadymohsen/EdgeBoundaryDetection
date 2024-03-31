@@ -14,13 +14,13 @@ from ChainCode import ChainCode
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import  Figure
 
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------
 
 
-# -----------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------
-# -----------------------------------------------------------------------------------------------------------------
 
 
 
@@ -35,12 +35,9 @@ class MyTabWidget(QTabWidget):
         
         self.houghTransform = houghTransformShapeDetection(self)
        
-
         
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
-
-
 
     def browse_image_HoughDetection(self):
         options = QFileDialog.Options()
@@ -53,6 +50,15 @@ class MyTabWidget(QTabWidget):
             self.houghTransform.detectShape()
 
 
+    # def browse_image_ActiveContour(self):
+    #     options = QFileDialog.Options()
+    #     file_name, _ = QFileDialog.getOpenFileName(self, "Select Image", "",
+    #                                             "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
+    #                                             options=options)
+    #     if file_name:
+    #         self.selected_image_path = file_name
+    #         active_contour_instance = ActiveContour(file_name)
+    #         self.display_image_on_graphics_layout_ActiveContour(file_name)
 
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
@@ -61,26 +67,42 @@ class MyTabWidget(QTabWidget):
         image_data = cv2.imread(image_path)
         image_data = cv2.cvtColor(image_data, cv2.COLOR_BGR2GRAY)
         image_data = np.rot90(image_data, -1)
+        # Clear the previous image if any
         self.graphics_beforeHoughDetection.clear()
+        # Create a PlotItem or ViewBox
         view_box = self.graphics_beforeHoughDetection.addViewBox()
+        # Create an ImageItem and add it to the ViewBox
         image_item = pg.ImageItem(image_data)
         view_box.addItem(image_item)
+        # Optional: Adjust the view to fit the image
         view_box.autoRange()
-    
-
     
     def display_image(self,graphics_widget,image_data):
         """Utility function to display an image in a given graphics layout widget."""
         if image_data is not None:
+            # Clear the previous image if any
             graphics_widget.clear()
+            # Convert image data to the right format (adding a channel dimension)
+            # image_data_formatted = image_data[..., np.newaxis]
             image_data = np.rot90(image_data, -1)
+            # Create a PlotItem or ViewBox
             view_box = graphics_widget.addViewBox()
+            # Create an ImageItem and add it to the ViewBox
             image_item = pg.ImageItem(image_data)
             view_box.addItem(image_item)
+            # Adjust the view to fit the image
+            # view_box.autoRange()
+            # view_box.disableAutoRange()
+            # self.ax.clear()
+            # self.ax.imshow(cv2.cvtColor(image_data, cv2.IMREAD_GRAYSCALE))
+            # scene = QtWidgets.QGraphicsScene()
+            # canvas = FigureCanvasQTAgg(self.fig)
+            # self.graphicsView.setScene(scene)
+            # scene.addWidget(canvas)
+            # self.fig.canvas.draw()
+            
         else:
             print("Image data is not available.")
-
-
 
     def browse_image_ActiveContour(self):
         options = QFileDialog.Options()
@@ -110,8 +132,6 @@ class MyTabWidget(QTabWidget):
             # Store all_img in self to access it in display_next_image
             self.all_img = all_img
 
-
-
     def display_next_image(self):
         if self.image_index < len(self.all_img):
             img = self.all_img[self.image_index]
@@ -130,6 +150,15 @@ class MyTabWidget(QTabWidget):
             chain_code_instance = ChainCode()
             chain_code_instance.print_chain_code(self.contour_points)
         
+
+        
+
+
+                
+
+
+
+            # Display the Canny edge processed image in graphics_afterActiveContour
           
 
 # -----------------------------------------------------------------------------------------------------------------

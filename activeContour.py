@@ -4,45 +4,21 @@ import matplotlib.pyplot as plt
 from ChainCode import ChainCode
 
 class ActiveContour:
-    def __init__(self, image_path, main_window):
+    def __init__(self, image_path,main_window):
         self.image_path = image_path
         self.ui = main_window
         self.handle_buttons()
         self.gray_image, self.edge_image = self.load_and_process_image()
         self.contour_r, self.contour_c = [], []
-        self.contour_points = []
-        self.Init_contour()
+        self.contour_points =[]
         self.all_img = []
 
-        # Set initial values for labels
-        self.ui.iterations_label.setText(str(self.ui.iterations_Slider.value()))
-        self.ui.points_label.setText(str(self.ui.Points_Slider.value()))
-
-        # Update labels with initial values
-        self.sliderIterations_value()
-        self.sliderPoints_value()
-
-
-
-
-
-
-        
 
     def handle_buttons(self):
+        self.ui.Points_Slider.valueChanged.connect(self.Init_contour)
+        self.ui.iterations_Slider.valueChanged.connect(self.Init_contour)
         self.ui.Points_Slider.valueChanged.connect(self.sliderPoints_value)
         self.ui.iterations_Slider.valueChanged.connect(self.sliderIterations_value)
-
-    def sliderIterations_value(self):
-        iterations = str(self.ui.iterations_Slider.value())
-        self.ui.iterations_label.setText(iterations)
-
-    def sliderPoints_value(self):
-        points = str(self.ui.Points_Slider.value())
-        self.ui.points_label.setText(points)
-
-
-
 
         
         
@@ -66,8 +42,16 @@ class ActiveContour:
         print("SUCCESS - Image is converted to Canny Edges\n\n")
         
         return  np.array(padding_img) , np.array(edge_image)
+
+    def sliderPoints_value(self):
+        self.ui.points_labels.setText(str(self.ui.Points_Slider.value()))
+
+    def sliderIterations_value(self):
+        self.ui.iterations_label.setText(str(self.ui.iterations_Slider.value()))
        
 
+    def get_contour(self):
+        return self.contour_points 
     def get_gray_image_data(self):
         return self.gray_image
 
@@ -75,6 +59,9 @@ class ActiveContour:
         return self.edge_image
     
     def Init_contour(self):     
+        self.contour_r, self.contour_c = [], []
+        self.contour_points =[]
+        self.all_img = []
         points = int(self.ui.Points_Slider.value())
         
         print(f"points:{points}")
@@ -93,6 +80,8 @@ class ActiveContour:
             self.contour_points.append((r,c))
 
         self.contour_points = np.array(self.contour_points)  
+        self.all_img, self.area_list , self.perimeter_list = self.active_contour()
+        return self.all_img, self.area_list , self.perimeter_list
             
     def norm_0_1(self, arr):
         maximum = np.amax(arr)
