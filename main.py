@@ -93,9 +93,9 @@ class MyTabWidget(QTabWidget):
             gray_image = active_contour_instance.get_gray_image_data()
             edge_image = active_contour_instance.get_edge_image_data()
             self.display_image(self.graphics_beforeActiveContour, gray_image)
-            all_img, self.area_list , self.perimeter_list = active_contour_instance.active_contour()
+            all_img, self.area_list , self.perimeter_list = active_contour_instance.Init_contour()
             self.contour_points = active_contour_instance.contour_points
-            print(f"len:{len(all_img)}")
+
 
             # Create a QTimer instance
             self.timer = QTimer()
