@@ -40,8 +40,8 @@ class MyTabWidget(QTabWidget):
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
     def handle_buttons(self):
-        self.Points_Slider.valueChanged.connect(self.implement_contour)
-        self.iterations_Slider.valueChanged.connect(self.implement_contour)
+        self.Points_Slider.sliderReleased.connect(self.implement_contour)
+        self.iterations_Slider.sliderReleased.connect(self.implement_contour)
         self.Points_Slider.valueChanged.connect(self.sliderPoints_value)
         self.iterations_Slider.valueChanged.connect(self.sliderIterations_value)
 
