@@ -11,13 +11,13 @@ class ActiveContour:
         self.gray_image, self.edge_image = self.load_and_process_image()
         self.contour_r, self.contour_c = [], []
         self.contour_points =[]
-        self.Init_contour()
+        # self.Init_contour()
         self.all_img = []
 
 
     def handle_buttons(self):
         self.ui.Points_Slider.valueChanged.connect(self.Init_contour)
-        self.ui.iterations_Slider.valueChanged.connect(self.active_contour)
+        self.ui.iterations_Slider.valueChanged.connect(self.Init_contour)
         self.ui.Points_Slider.valueChanged.connect(self.sliderPoints_value)
         self.ui.iterations_Slider.valueChanged.connect(self.sliderIterations_value)
 
@@ -60,6 +60,9 @@ class ActiveContour:
         return self.edge_image
     
     def Init_contour(self):     
+        self.contour_r, self.contour_c = [], []
+        self.contour_points =[]
+        self.all_img = []
         points = int(self.ui.Points_Slider.value())
         
         print(f"points:{points}")
@@ -78,6 +81,8 @@ class ActiveContour:
             self.contour_points.append((r,c))
 
         self.contour_points = np.array(self.contour_points)  
+        self.all_img, self.area_list , self.perimeter_list = self.active_contour()
+        return self.all_img, self.area_list , self.perimeter_list
             
     def norm_0_1(self, arr):
         maximum = np.amax(arr)
