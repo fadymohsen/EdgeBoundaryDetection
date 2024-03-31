@@ -1,9 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QTabWidget, QFileDialog
 from PyQt5 import uic
-from PyQt5 import QtWidgets
 import cv2
-import time
 from PyQt5.QtCore import QTimer
 import pyqtgraph as pg
 import numpy as np
