@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from ChainCode import Chaincode
+from ChainCode import ChainCode
 
 class ActiveContour:
     def __init__(self, image_path,main_window):
@@ -18,8 +18,8 @@ class ActiveContour:
     def handle_buttons(self):
         self.ui.Points_Slider.valueChanged.connect(self.Init_contour)
         self.ui.iterations_Slider.valueChanged.connect(self.active_contour)
-        self.ui.Points_Slider.valueChanged.connect(self.sliderpoints_value)
-        self.ui.iterations_Slider.valueChanged.connect(self.slideriterations_value)
+        self.ui.Points_Slider.valueChanged.connect(self.sliderPoints_value)
+        self.ui.iterations_Slider.valueChanged.connect(self.sliderIterations_value)
 
         
         
@@ -44,10 +44,10 @@ class ActiveContour:
         
         return  np.array(padding_img) , np.array(edge_image)
 
-    def sliderpoints_value(self):
+    def sliderPoints_value(self):
         self.ui.points_labels.setText(str(self.ui.Points_Slider.value()))
 
-    def slideriterations_value(self):
+    def sliderIterations_value(self):
         self.ui.iterations_label.setText(str(self.ui.iterations_Slider.value()))
        
 

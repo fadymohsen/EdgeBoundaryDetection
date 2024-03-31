@@ -10,7 +10,7 @@ import pyqtgraph as pg
 import numpy as np
 from houghTransform import houghTransformShapeDetection
 from activeContour import ActiveContour
-from ChainCode import Chaincode
+from ChainCode import ChainCode
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import  Figure
 
@@ -147,7 +147,7 @@ class MyTabWidget(QTabWidget):
         else:
             # Stop the timer when all images have been displayed
             self.timer.stop()
-            chain_code_instance = Chaincode()
+            chain_code_instance = ChainCode()
             chain_code_instance.print_chain_code(self.contour_points)
         
 
