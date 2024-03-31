@@ -10,7 +10,7 @@ import pyqtgraph as pg
 import numpy as np
 from houghTransform import houghTransformShapeDetection
 from activeContour import ActiveContour
-
+from ChainCode import ChainCode
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import  Figure
 
@@ -116,6 +116,7 @@ class MyTabWidget(QTabWidget):
             edge_image = active_contour_instance.get_edge_image_data()
             self.display_image(self.graphics_beforeActiveContour, gray_image)
             all_img, self.area_list , self.perimeter_list = active_contour_instance.active_contour()
+            self.contour_points = active_contour_instance.contour_points
             print(f"len:{len(all_img)}")
 
             # Create a QTimer instance
@@ -146,6 +147,12 @@ class MyTabWidget(QTabWidget):
         else:
             # Stop the timer when all images have been displayed
             self.timer.stop()
+            chain_code_instance = ChainCode()
+            chain_code_instance.print_chain_code(self.contour_points)
+        
+
+        
+
 
                 
 
