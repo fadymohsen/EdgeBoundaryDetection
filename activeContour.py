@@ -1,11 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-
-
-
+from ChainCode import Chaincode
 
 class ActiveContour:
     def __init__(self, image_path,main_window):
@@ -20,9 +16,11 @@ class ActiveContour:
 
 
     def handle_buttons(self):
-        print("Kkkkkkk")
         self.ui.Points_Slider.valueChanged.connect(self.Init_contour)
         self.ui.iterations_Slider.valueChanged.connect(self.active_contour)
+        self.ui.Points_Slider.valueChanged.connect(self.sliderpoints_value)
+        self.ui.iterations_Slider.valueChanged.connect(self.slideriterations_value)
+
         
         
     def load_and_process_image(self):
@@ -46,6 +44,12 @@ class ActiveContour:
         
         return  np.array(padding_img) , np.array(edge_image)
 
+    def sliderpoints_value(self):
+        self.ui.points_labels.setText(str(self.ui.Points_Slider.value()))
+
+    def slideriterations_value(self):
+        self.ui.iterations_label.setText(str(self.ui.iterations_Slider.value()))
+       
 
     def get_gray_image_data(self):
         return self.gray_image
@@ -53,13 +57,13 @@ class ActiveContour:
     def get_edge_image_data(self):
         return self.edge_image
     
-    def Init_contour(self):
-       
+    def Init_contour(self):     
         points = int(self.ui.Points_Slider.value())
+        
         print(f"points:{points}")
         # center_x = int(self.ui.CenterX_Slider.value())
         # center_y = int(self.ui.CenterY_Slider.value())
-        s = np.linspace(0, 2*np.pi, points)
+        s = np.linspace(0, 2*np.pi,points)
         # for apple , shape and fish
         contour_r =((np.abs(400- 380*np.sin(s))) // 2).astype(int)
         contour_c =((np.abs(400 + 380*np.cos(s))) // 2).astype(int)
@@ -187,6 +191,7 @@ class ActiveContour:
 
     def active_contour(self):
         iterations = int(self.ui.iterations_Slider.value())
+       
         all_img = []
         area_list, perimeter_list = [], []
         for __ in range(iterations):
@@ -215,10 +220,16 @@ class ActiveContour:
             self.contour_r = new_contour_r
                
             self.contour_points= self.update_points(new_contour_r,new_contour_c)
+            # self.chain_code_instance.print_chain_code(self.contour_points)
+        
             area_list.append(self.calculate_area(self.contour_points))
             perimeter_list.append(self.calculate_perimeter(self.contour_points))
         #     print(updated_contour_points)
             lapcopy = self.draw_contour(lapcopy,self.contour_points)
             self.all_img.append(lapcopy)
 
+
+            
+        
+        # self.chain_code_instance.print_chain_code(self.contour_points)
         return self.all_img, area_list, perimeter_list    
