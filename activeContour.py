@@ -7,29 +7,17 @@ class ActiveContour:
     def __init__(self, image_path, main_window):
         self.image_path = image_path
         self.ui = main_window
-        self.handle_buttons()
+        # self.handle_buttons()
         self.gray_image, self.edge_image = self.load_and_process_image()
         self.contour_r, self.contour_c = [], []
         self.contour_points = []
         self.all_img = []
         
         # Set initial values for sliders
-        self.sliderPoints_value()
-        self.sliderIterations_value()
+        # self.sliderPoints_value()
+        # self.sliderIterations_value()
 
-    def handle_buttons(self):
-        self.ui.Points_Slider.valueChanged.connect(self.Init_contour)
-        self.ui.iterations_Slider.valueChanged.connect(self.Init_contour)
-        self.ui.Points_Slider.valueChanged.connect(self.sliderPoints_value)
-        self.ui.iterations_Slider.valueChanged.connect(self.sliderIterations_value)
-
-    def sliderPoints_value(self):
-        points_value = self.ui.Points_Slider.value()
-        self.ui.points_label.setText(f"{points_value}")
-
-    def sliderIterations_value(self):
-        iterations_value = self.ui.iterations_Slider.value()
-        self.ui.iterations_label.setText(f"{iterations_value}")
+  
 
 
 

@@ -32,12 +32,26 @@ class MyTabWidget(QTabWidget):
         self.selected_image_path = None
         self.pushButton_browseImage_HoughDetection.clicked.connect(self.browse_image_HoughDetection)
         self.pushButton_browseImage_ActiveContour.clicked.connect(self.browse_image_ActiveContour)
-        
+        self.active_contour_instance = None
         self.houghTransform = houghTransformShapeDetection(self)
+        self.handle_buttons()
        
         
 # -----------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------
+    def handle_buttons(self):
+        self.Points_Slider.valueChanged.connect(self.implement_contour)
+        self.iterations_Slider.valueChanged.connect(self.implement_contour)
+        self.Points_Slider.valueChanged.connect(self.sliderPoints_value)
+        self.iterations_Slider.valueChanged.connect(self.sliderIterations_value)
+
+    def sliderPoints_value(self):
+        points_value = self.Points_Slider.value()
+        self.points_label.setText(f"{points_value}")
+
+    def sliderIterations_value(self):
+        iterations_value = self.iterations_Slider.value()
+        self.iterations_label.setText(f"{iterations_value}")
 
     def browse_image_HoughDetection(self):
         options = QFileDialog.Options()
@@ -110,27 +124,33 @@ class MyTabWidget(QTabWidget):
                                                 "Image Files (*.png *.jpg *.jpeg *.bmp *.gif *.webp)",
                                                 options=options)
         if file_name:
-            active_contour_instance = ActiveContour(file_name,self)
-            # active_contour_instance.handle_buttons()
-            gray_image = active_contour_instance.get_gray_image_data()
-            edge_image = active_contour_instance.get_edge_image_data()
+            self.active_contour_instance = ActiveContour(file_name,self)
+            gray_image = self.active_contour_instance.get_gray_image_data()
+            edge_image = self.active_contour_instance.get_edge_image_data()
             self.display_image(self.graphics_beforeActiveContour, gray_image)
-            all_img, self.area_list , self.perimeter_list = active_contour_instance.Init_contour()
-            self.contour_points = active_contour_instance.contour_points
+            # active_contour_instance.handle_buttons()
+           
+
+    def implement_contour(self):
+        print("llllll")
+       
+        all_img, self.area_list , self.perimeter_list = self.active_contour_instance.Init_contour()
+        self.contour_points = self.active_contour_instance.contour_points
 
 
-            # Create a QTimer instance
-            self.timer = QTimer()
-            self.timer.timeout.connect(self.display_next_image)
-            
-            # Initialize index to track the current image being displayed
-            self.image_index = 0
+        # Create a QTimer instance
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.display_next_image)
+        
+        # Initialize index to track the current image being displayed
+        self.image_index = 0
 
-            # Start the timer
-            self.timer.start(50)  # Adjust the interval (milliseconds) as needed
+        # Start the timer
+        self.timer.start(50)  # Adjust the interval (milliseconds) as needed
 
-            # Store all_img in self to access it in display_next_image
-            self.all_img = all_img
+        # Store all_img in self to access it in display_next_image
+        self.all_img = all_img
+        
 
     def display_next_image(self):
         if self.image_index < len(self.all_img):
