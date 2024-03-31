@@ -47,6 +47,8 @@ class ActiveContour:
         return  np.array(padding_img) , np.array(edge_image)
 
 
+    def get_contour(self):
+        return self.contour_points 
     def get_gray_image_data(self):
         return self.gray_image
 
