@@ -12,7 +12,16 @@ The tasks performed include:
 
 ## Diagrams for Illustration
 - Lines Detection
-![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/LinesEdgeDetection.png)
+![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/LinesDetection.png)
+- Circle Detection
+![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/CirclesDetection.png)
+- Active Contour - Phase (1)
+![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/ActiveContour-1.png)
+- Active Contour - Phase (1)
+![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/ActiveContour-2.png)
+- Active Contour - Phase (1)
+![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/ActiveContour-3.png)
+
 
 
 
