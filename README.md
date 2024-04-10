@@ -10,6 +10,12 @@ The tasks performed include:
 
 
 
+## Diagrams for Illustration
+- Lines Detection
+![Browse - Before Adding](https://github.com/fadymohsen/EdgeBoundaryDetection/blob/main/Videos%20%26%20Screenshots/LinesEdgeDetection.png)
+
+
+
 ## Installation
 1. Clone the repository:
 ```
